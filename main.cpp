@@ -14,6 +14,8 @@ enum State
 	OTHERS = 3
 };
 
+void showStatus(const Hero hero, const Enemy enemy);
+
 int main()
 {
 	char heroName[] = "Yamada";
@@ -23,6 +25,9 @@ int main()
 	State state = OTHERS;
 	Hero hero(heroName, heroHp);
 	Enemy enemy(enemyName, enemyHp); 
+	
+	showStatus(hero, enemy);
+
 	do
 	{
 		char input = ' ';
@@ -43,17 +48,17 @@ int main()
 
 		enemy.battleAI(&hero);
 
-		if (hero.hGetter() <= 0 && enemy.hGetter() <= 0)
+		if (hero.hpGetter() <= 0 && enemy.hpGetter() <= 0)
 		{
 			state = DRAW;
 			break;
 		}
-		else if (enemy.hGetter() <= 0)
+		else if (enemy.hpGetter() <= 0)
 		{
 			state = WIN; 
 			break;
 		}
-		else if (hero.hGetter() <= 0)
+		else if (hero.hpGetter() <= 0)
 		{
 			state = LOSE; 
 			break;
@@ -64,18 +69,32 @@ int main()
 	switch (state)
 	{
 	case WIN:
-		cout << hero.nGetter() << " は " << enemy.nGetter() << " に勝った。";
+		cout << hero.nameGetter() << " は " << enemy.nameGetter() << " に勝った。";
 		break;
 
 	case DRAW:
-		cout << hero.nGetter() << " と " << enemy.nGetter() << " は相打ちになった。";
+		cout << hero.nameGetter() << " と " << enemy.nameGetter() << " は相打ちになった。";
 		break;
 
 	case LOSE:
-		cout << hero.nGetter() << " は " << enemy.nGetter() << " に負けた。";
+		cout << hero.nameGetter() << " は " << enemy.nameGetter() << " に負けた。";
 		break;
 
 	default:
 		break;
 	}
+}
+
+void showStatus(Hero hero, Enemy enemy)
+{
+	cout << "自分の名前 > " << hero.nameGetter() << endl
+		<< "HP > " << hero.hpGetter() << endl
+		<< "ATK > " << hero.atkGetter() << endl
+		<< "DEF > " << hero.defGetter() << endl
+		<< endl
+		<< "敵の名前 > " << enemy.nameGetter() << endl
+		<< "HP > " << enemy.hpGetter() << endl
+		<< "ATK > " << enemy.atkGetter() << endl
+		<< "DEF > " << enemy.defGetter() << endl
+		<< endl;
 }

@@ -5,7 +5,38 @@
 #include <new>
 #include <cstdlib>
 #include <cstring>
+#include <algorithm>
 using namespace std;
+
+void Hero::operator=(const Hero& other)
+{
+	char* m_name = new(nothrow) char[strlen(other.name) + 1];
+
+	if (m_name != nullptr)
+	{
+		if (name != nullptr)
+		{
+			delete[] name;
+			copy(other.name, other.name + strlen(other.name) + 1, name);
+		}
+	}
+	hp = other.hp;
+	atk = other.atk;
+	def = other.def;
+}
+
+Hero::Hero(const Hero& other)
+{
+	name = new(nothrow) char[strlen(other.name) + 1];
+	maxHp = other.maxHp;
+	hp = other.hp;
+	atk = other.atk;
+	def = other.def;
+	if (name != nullptr)
+	{
+		copy(other.name, other.name + strlen(other.name) + 1, name);
+	}
+}
 
 Hero::Hero(char* m_name, int m_hp)
 {
@@ -30,34 +61,39 @@ Hero::~Hero()
 	}
 }
 
-void Hero::dSetter(int damage) // ダメージセッター
+void Hero::damageSetter(int damage) // ダメージセッター
 {
 	hp -= damage;
 	if (hp < 0) hp = 0;
 }
 
-int Hero::dGetter() // ディフェンスゲッター
+int Hero::defGetter() const // ディフェンスゲッター
 {
 	return def;
 }
 
-int Hero::hGetter() // HPゲッター
+int Hero::hpGetter() const // HPゲッター
 {
 	return hp;
 }
 
-char* Hero::nGetter() // 名前ゲッター
+int Hero::atkGetter() const // アタックゲッター
+{
+	return atk;
+}
+
+char* Hero::nameGetter() const // 名前ゲッター
 {
 	return name;
 }
 
 void Hero::attack(Enemy* enemy)
 {
-	int eDef = enemy->dGetter();
+	int eDef = enemy->defGetter();
 	int damage = atk - eDef;
-	if (atk > eDef) enemy->dSetter(damage);
-	cout << name << "は" << enemy->nGetter() << "に、" << damage << "のダメージを与えた。" << endl
-		<< enemy->nGetter() << "のHPは残り" << enemy->hGetter() << "となった。" << endl;
+	if (atk > eDef) enemy->damageSetter(damage);
+	cout << name << "は" << enemy->nameGetter() << "に、" << damage << "のダメージを与えた。" << endl
+		<< enemy->nameGetter() << "のHPは残り" << enemy->hpGetter() << "となった。" << endl;
 }
 
 void Hero::heal()
